@@ -2,7 +2,7 @@
 
 import { Box, Button, Container, Grid, GridItem, Heading, Image, Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
 
 interface Recipe {
@@ -17,11 +17,21 @@ export default function Recipes() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes`);
+        const filterType = searchParams.get('filterType');
+        const filterValue = searchParams.get('filterValue');
+        let url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes`;
+
+        if (filterType && filterValue) {
+          url += `?type=${filterType}&value=${filterValue}`;
+          setTitle(`${filterValue} Recipes`);
+        }
+
+        const response = await axios.get(url);
         setRecipes(response.data.meals);
       } catch (error) {
         console.error('Error fetching recipes:', error);
@@ -29,7 +39,7 @@ export default function Recipes() {
     };
 
     fetchRecipes();
-  }, []);
+  }, [searchParams]);
 
   const handleRecipeClick = (id: string) => {
     router.push(`/recipes/${id}`);
