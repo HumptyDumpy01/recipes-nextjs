@@ -75,9 +75,9 @@ export default function RecipeDetailsPage() {
 
   if (loading) {
     return (
-      <div className={`w-full h-full flex items-center justify-center mt-5`}>
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
         <Spinner size="xl" />
-      </div>
+      </Box>
     );
   }
 
@@ -107,10 +107,6 @@ export default function RecipeDetailsPage() {
     </ListItem>
   ));
 
-  const ingredientsText = recipe.ingredients
-    .map(ingredient => `${ingredient.measure} ${ingredient.name}`)
-    .join(', ');
-
   const displayedInstructions = showAllSteps ? instructions : instructions.slice(0, 8);
 
   return (
@@ -134,9 +130,18 @@ export default function RecipeDetailsPage() {
           <Text sx={{ fontSize: 20, fontWeight: 600, mt: 4, mb: 4, textAlign: `center` }}>
             Ingredients:
           </Text>
-          <Text color="blue.500" cursor="pointer" onClick={() => handleIngredientClick(ingredientsText)}>
-            {ingredientsText}
-          </Text>
+          <UnorderedList>
+            {recipe.ingredients.map((ingredient, index) => (
+              <ListItem
+                key={index}
+                color="blue.500"
+                cursor="pointer"
+                onClick={() => handleIngredientClick(ingredient.name)}
+              >
+                {ingredient.measure} {ingredient.name}
+              </ListItem>
+            ))}
+          </UnorderedList>
         </Box>
         <Box sx={{ ml: `auto` }}>
           <Heading as="h2" size="md" mb={4}>More in {recipe.strCategory}</Heading>

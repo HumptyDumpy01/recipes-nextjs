@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Button, Container, Grid, GridItem, Heading, Image, Text } from '@chakra-ui/react';
+import { Box, Button, Container, Grid, GridItem, Heading, Image, Spinner, Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
@@ -15,12 +15,14 @@ export default function Recipes() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [title, setTitle] = useState('All Recipes');
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
   const itemsPerPage = 8;
   const router = useRouter();
   const searchParams = useSearchParams();
 
   useEffect(() => {
     const fetchRecipes = async () => {
+      setLoading(true);
       try {
         const filterType = searchParams.get('filterType');
         const filterValue = searchParams.get('filterValue');
@@ -35,6 +37,8 @@ export default function Recipes() {
         setRecipes(response.data.meals);
       } catch (error) {
         console.error('Error fetching recipes:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -55,6 +59,14 @@ export default function Recipes() {
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const selectedRecipes = recipes.slice(startIndex, startIndex + itemsPerPage);
+
+  if (loading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+        <Spinner size="xl" />
+      </Box>
+    );
+  }
 
   return (
     <>
