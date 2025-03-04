@@ -1,7 +1,12 @@
-import type { NextConfig } from "next";
+// next.config.ts
+import dotenv from 'dotenv';
 
-const nextConfig: NextConfig = {
-  /* config options here */
+dotenv.config();
+
+const nextConfig = {
+  env: {
+    NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL
+  }
 };
 
 export default nextConfig;

@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Recipe App Frontend
+
+This is a frontend application built with TypeScript, and Next.js for browsing and exploring recipes. It
+interacts with a backend API to fetch recipe data.
 
 ## Getting Started
 
-First, run the development server:
+Follow these steps to set up and run the application:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Prerequisites
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+* Node.js (version 18 or later recommended)
+* npm or yarn
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Installation
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **Clone the repository:**
 
-## Learn More
+   ```bash
+   git clone <your-repository-url>
+   cd <your-frontend-directory>
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+2. **Install dependencies:**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Backend Setup
 
-## Deploy on Vercel
+Before running the frontend, ensure the backend API is running. Follow the instructions in the `backend/README.md` file
+to set up and run the backend.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Note:** The backend should be running on `http://localhost:3005` by default.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Environment Variables
+
+1. Create a `.env` file in the root of your project.
+2. Add the following environment variable to the `.env` file:
+
+   ```
+   NEXT_PUBLIC_BACKEND_URL=http://localhost:3005
+   ```
+
+   This variable tells the frontend where to find the backend API. If you're running the backend on a different port or
+   host, adjust the URL accordingly.
+
+### Running the Application
+
+1. Start the development server:
+
+   ```bash
+   npm run build
+   npm run start
+   ```
+
+2. Open your browser and navigate to `http://localhost:3000` (or the port specified by Next.js).
