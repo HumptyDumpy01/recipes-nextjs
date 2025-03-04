@@ -9,13 +9,15 @@ import {
   Image,
   ListItem,
   OrderedList,
-  Spinner,
   Text,
   UnorderedList
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import axios from 'axios';
+import LoadingScreen from '@/components/Utils/LoadingScreen';
+import Sidebar from '@/components/Recipes/Sidebar';
+import RecipeItem from '@/components/Recipes/RecipeItem';
 
 interface Recipe {
   idMeal: string;
@@ -32,6 +34,8 @@ export default function RecipeDetailsPage() {
   const [loading, setLoading] = useState(true);
   const [showAllSteps, setShowAllSteps] = useState(false);
   const [categoryRecipes, setCategoryRecipes] = useState<Recipe[]>([]);
+  const [visibleIngredients, setVisibleIngredients] = useState(8);
+  const [visibleCategoryRecipes, setVisibleCategoryRecipes] = useState(8);
   const { id } = useParams();
   const router = useRouter();
 
@@ -74,11 +78,7 @@ export default function RecipeDetailsPage() {
   }, [id]);
 
   if (loading) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
-        <Spinner size="xl" />
-      </Box>
-    );
+    return <LoadingScreen />;
   }
 
   if (!recipe) {
@@ -109,10 +109,19 @@ export default function RecipeDetailsPage() {
 
   const displayedInstructions = showAllSteps ? instructions : instructions.slice(0, 8);
 
+  const handleShowMoreIngredients = () => {
+    setVisibleIngredients((prev) => prev + 8);
+  };
+
+  const handleShowMoreCategoryRecipes = () => {
+    setVisibleCategoryRecipes((prev) => prev + 8);
+  };
+
   return (
     <Container maxW="container.xl" py={4}>
-      <Grid templateColumns="300px 1fr 300px" gap={6}>
-        <Image borderRadius={12} src={recipe.strMealThumb} alt={recipe.strMeal} boxSize="300px" objectFit="cover" />
+      <Grid templateColumns={{ base: '1fr', md: '300px 1fr', lg: '300px 1fr 300px' }} gap={6}>
+        <Image borderRadius={12} src={recipe.strMealThumb} alt={recipe.strMeal} boxSize={{ md: `250px`, base: `100%` }}
+               objectFit="cover" />
         <Box sx={{ ml: 30 }}>
           <Heading as="h1" size="xl" textAlign="center">{recipe.strMeal}</Heading>
           <Text textAlign="center" color="blue.500" cursor="pointer" onClick={handleCountryClick}>
@@ -131,32 +140,24 @@ export default function RecipeDetailsPage() {
             Ingredients:
           </Text>
           <UnorderedList>
-            {recipe.ingredients.map((ingredient, index) => (
-              <ListItem
-                key={index}
-                color="blue.500"
-                cursor="pointer"
-                onClick={() => handleIngredientClick(ingredient.name)}
-              >
-                {ingredient.measure} {ingredient.name}
-              </ListItem>
+            {recipe.ingredients.slice(0, visibleIngredients).map((ingredient, index) => (
+              <RecipeItem key={index} handleIngredientClick={handleIngredientClick} ingredient={ingredient} />
             ))}
           </UnorderedList>
+          {recipe.ingredients.length > visibleIngredients && (
+            <Button mt={4} onClick={handleShowMoreIngredients}>Show More</Button>
+          )}
         </Box>
-        <Box sx={{ ml: `auto` }}>
-          <Heading as="h2" size="md" mb={4}>More in {recipe.strCategory}</Heading>
-          <UnorderedList>
-            {categoryRecipes.map((categoryRecipe) => (
-              <ListItem
-                key={categoryRecipe.idMeal}
-                color="blue.500"
-                cursor="pointer"
-                onClick={() => handleCategoryClick(categoryRecipe.strCategory)}
-              >
-                {categoryRecipe.strMeal}
-              </ListItem>
-            ))}
-          </UnorderedList>
+        <Box sx={{ ml: { base: 0, lg: 30 }, textAlign: { base: 'center', md: 'left' } }}>
+          <Sidebar
+            recipe={recipe}
+            categoryRecipes={categoryRecipes}
+            visibleCategoryRecipes={visibleCategoryRecipes}
+            handleCategoryClick={handleCategoryClick}
+          /> {categoryRecipes.length > visibleCategoryRecipes && (
+          <Button
+            mt={4} onClick={handleShowMoreCategoryRecipes}>Show More</Button>
+        )}
         </Box>
       </Grid>
     </Container>

@@ -1,11 +1,14 @@
 'use client';
 
-import { Box, Button, Container, Grid, GridItem, Heading, Image, Input, Select, Spinner, Text } from '@chakra-ui/react';
+import { Box, Button, Container, Heading, Input, Select } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
+import LoadingScreen from '@/components/Utils/LoadingScreen';
+import RecipeItems from '@/components/Recipes/RecipeItems';
+import InfoText from '@/components/Utils/InfoText';
 
-interface Recipe {
+export type Recipe = {
   idMeal: string;
   strMeal: string;
   strMealThumb: string;
@@ -76,11 +79,7 @@ export default function Recipes() {
   const selectedRecipes = Array.isArray(recipes) ? recipes.slice(startIndex, startIndex + itemsPerPage) : [];
 
   if (loading) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
-        <Spinner size="xl" />
-      </Box>
-    );
+    return <LoadingScreen />;
   }
 
   return (
@@ -106,32 +105,10 @@ export default function Recipes() {
           <Button onClick={handleClearFilters}>Clear Filters</Button>
         </Box>
         {selectedRecipes.length === 0 ? (
-          <Box textAlign="center" mt={4}>
-            <Text>No items to be seen</Text>
-          </Box>
+          <InfoText text={`No items to be seen!`} />
         ) : (
           <>
-            <Grid templateColumns="repeat(auto-fill, minmax(250px, 1fr))" gap={6}
-            >
-              {selectedRecipes.map(recipe => (
-                <GridItem
-                  justifySelf="center"
-                  width="250px"
-                  key={recipe.idMeal}
-                  borderWidth="1px"
-                  borderRadius="lg"
-                  overflow="hidden"
-                  cursor="pointer"
-                  onClick={() => handleRecipeClick(recipe.idMeal)}
-                  _hover={{ boxShadow: 'lg' }}
-                >
-                  <Image src={recipe.strMealThumb} alt={recipe.strMeal} boxSize="250px" objectFit="cover" />
-                  <Box p={4}>
-                    <Text textAlign="center" fontSize="lg" fontWeight="semibold">{recipe.strMeal}</Text>
-                  </Box>
-                </GridItem>
-              ))}
-            </Grid>
+            <RecipeItems handleRecipeClick={handleRecipeClick} selectedRecipes={selectedRecipes} />
             <Box display="flex" justifyContent="center" gap={`15px`} mt={4}>
               <Button onClick={handlePreviousPage} isDisabled={currentPage === 1}>Previous</Button>
               <Button onClick={handleNextPage} isDisabled={startIndex + itemsPerPage >= recipes.length}>Next</Button>
