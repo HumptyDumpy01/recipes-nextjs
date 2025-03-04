@@ -61,12 +61,14 @@ export default function Recipes() {
 
   const handleFilterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setCurrentPage(1);
     router.push(`/?filterType=${filterType}&filterValue=${filterValue}`);
   };
 
   const handleClearFilters = () => {
     setFilterType('');
     setFilterValue('');
+    setCurrentPage(1);
     router.push('/');
   };
 
