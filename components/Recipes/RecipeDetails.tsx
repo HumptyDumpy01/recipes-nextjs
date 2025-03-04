@@ -112,7 +112,7 @@ export default function RecipeDetailsPage() {
   return (
     <Container maxW="container.xl" py={4}>
       <Grid templateColumns="300px 1fr 300px" gap={6}>
-        <Image src={recipe.strMealThumb} alt={recipe.strMeal} boxSize="300px" objectFit="cover" />
+        <Image borderRadius={12} src={recipe.strMealThumb} alt={recipe.strMeal} boxSize="300px" objectFit="cover" />
         <Box sx={{ ml: 30 }}>
           <Heading as="h1" size="xl" textAlign="center">{recipe.strMeal}</Heading>
           <Text textAlign="center" color="blue.500" cursor="pointer" onClick={handleCountryClick}>

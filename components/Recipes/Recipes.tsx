@@ -87,7 +87,8 @@ export default function Recipes() {
     <>
       <Container maxW="container.xl" py={4}>
         <Heading as="h1" size="xl" mb={6}>{title}</Heading>
-        <Box as="form" onSubmit={handleFilterSubmit} mb={6} display="flex" gap={4}>
+        <Box as="form" onSubmit={handleFilterSubmit} mb={6} display="flex" gap={4}
+             flexWrap={{ base: 'wrap', md: 'nowrap' }}>
           <Select placeholder="Select filter type" value={filterType} onChange={(e) => setFilterType(e.target.value)}>
             <option value="name">Name</option>
             <option value="ingredient">Ingredient</option>
@@ -110,10 +111,11 @@ export default function Recipes() {
           </Box>
         ) : (
           <>
-            <Grid templateColumns="repeat(auto-fill, minmax(250px, 1fr))" gap={6} justifyContent="center"
-                  alignItems="center">
+            <Grid templateColumns="repeat(auto-fill, minmax(250px, 1fr))" gap={6}
+            >
               {selectedRecipes.map(recipe => (
                 <GridItem
+                  justifySelf="center"
                   width="250px"
                   key={recipe.idMeal}
                   borderWidth="1px"
